@@ -10,7 +10,9 @@ from dataclasses import dataclass
 class Configuration:
     """The configurable fields for the research assistant."""
     max_web_research_loops: int = 3
-    local_llm: str = "llama3.2"
+    local_llm: str = "deepseek-r1:32b"
+    max_output_tokens: int = 16384  # Maximum number of tokens for model output
+    max_search_results: int = 5  # Maximum number of search results to process per query
 
     @classmethod
     def from_runnable_config(

@@ -1,0 +1,15 @@
+*.py[cod]
+__pycache__/
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.pyc
+env/
+venv/
+
+
+.langgraph_api
+
+.env
