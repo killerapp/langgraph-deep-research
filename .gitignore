@@ -8,7 +8,7 @@ build/
 *.pyc
 env/
 venv/
-
+.venv
 
 .langgraph_api
 
