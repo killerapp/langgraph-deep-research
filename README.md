@@ -1,85 +1,107 @@
-# Ollama Deep Researcher
+# LangGraph DeepSeek Researcher
 
-Ollama Deep Researcher is a fully local web research assistant that uses any LLM hosted by [Ollama](https://ollama.com/search). Give it a topic, and it will generate a search query, gather web search results, summarize the results, reflect on the summary to examine knowledge gaps, generate a new search query to address the gaps, and improce the summary for a user-defined number of cycles. It will provide the user a final markdown summary with all sources used. 
+A sophisticated research assistant powered by LangGraph and DeepSeek, designed for deep contextual analysis and iterative research tasks. This project combines the power of LangGraph's directed workflow system with DeepSeek's advanced language model capabilities to create an intelligent, locally-run research assistant.
 
 ![research-rabbit](https://github.com/user-attachments/assets/4308ee9c-abf3-4abb-9d1e-83e7c2c3f187)
 
-## 📺 Video Tutorials
+## 🌟 Key Features
 
-See it in action or build it yourself? Check out these helpful video tutorials:
-- [Overview of Ollama Deep Researcher with R1](https://www.youtube.com/watch?v=sGUjmyfof4Q) - Load and test [DeepSeek R1](https://api-docs.deepseek.com/news/news250120).
-- [Building Ollama Deep Researcher from Scratch](https://www.youtube.com/watch?v=XGuTzHoqlj8) - Overview of how this is built.
+- **LangGraph-Powered Workflow**: Implements a sophisticated directed graph system for managing research processes
+- **DeepSeek Integration**: Leverages DeepSeek's R1 model (default: deepseek-r1:32b) for advanced language understanding
+- **Iterative Research Process**: Conducts deep, multi-cycle research with automatic knowledge gap identification
+- **Local Execution**: Runs completely locally using Ollama for model hosting
+- **Interactive Visualization**: Full research process visualization through LangGraph Studio
 
-## 🚀 Quickstart
+## 🚀 Getting Started
 
-Pull a local LLM that you want to use from [Ollama](https://ollama.com/search):
-```bash
-ollama pull llama3.2
-ollama pull deepseek-r1:8b
+### Prerequisites
+
+1. Install Ollama and pull the DeepSeek model:
+```powershell
+ollama pull deepseek-r1:32b
 ```
 
-For free web search (up to 1000 requests), [you can use the Tavily API](https://tavily.com/):
-```bash
-export TAVILY_API_KEY=<your_tavily_api_key>
-```
+2. Set up environment variables:
+   - Copy `.env.example` to `.env`
+   - Add your Tavily API key (free tier: 1000 requests) to `.env`:
+     ```
+     TAVILY_API_KEY=your_tavily_api_key
+     ```
 
-Clone the repository and launch the assistant with the LangGraph server:
-```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
+### Installation
+
+Clone and launch the assistant with LangGraph server:
+```powershell
+# Install UV package manager from https://docs.astral.sh/uv/getting-started/installation/
+
+# Clone and setup project
 git clone https://github.com/langchain-ai/ollama-deep-researcher.git
 cd ollama-deep-researcher
 uvx --refresh --from "langgraph-cli[inmem]" --with-editable . --python 3.11 langgraph dev
 ```
 
-You should see the following output and Studio will open in your browser:
-> Ready!
-> 
-> API: http://127.0.0.1:2024
-> 
-> Docs: http://127.0.0.1:2024/docs
-> 
-> LangGraph Studio Web UI: https://smith.langchain.com/studio/?baseUrl=http://127.0.0.1:2024
+## 🔍 Research Architecture
 
-Open `LangGraph Studio Web UI` via the URL in the output above. 
+The system implements an advanced research workflow based on LangGraph's directed graph architecture:
 
-In the `configuration` tab:
-* You can set the name of your local LLM to use with Ollama (it will by default be `llama3.2`) 
-* You can set the depth of the research iterations (it will by default be `3`)
+1. **Query Generation**
+   - Uses DeepSeek to generate focused search queries
+   - Structures outputs in JSON format for systematic processing
 
-<img width="1621" alt="Screenshot 2025-01-24 at 10 08 31 PM" src="https://github.com/user-attachments/assets/7cfd0e04-28fd-4cfa-aee5-9a556d74ab21" />
+2. **Web Research**
+   - Integrates with Tavily API for comprehensive web searches
+   - Implements intelligent source deduplication and reference management
 
-Give the assistant a topic for research, and you can visualize its process!
+3. **Source Analysis**
+   - Performs incremental summary building
+   - Maintains detailed source attribution
+   - Integrates new information with existing knowledge
 
-<img width="1621" alt="Screenshot 2025-01-24 at 10 08 22 PM" src="https://github.com/user-attachments/assets/4de6bd89-4f3b-424c-a9cb-70ebd3d45c5f" />
+4. **Iterative Refinement**
+   - Automatically identifies knowledge gaps
+   - Generates targeted follow-up queries
+   - Improves research depth through multiple iterations
 
-## How it works
+## 💻 Usage
 
-Ollama Deep Researcher is inspired by [IterDRAG](https://arxiv.org/html/2410.04343v1#:~:text=To%20tackle%20this%20issue%2C%20we,used%20to%20generate%20intermediate%20answers.). This approach will decompose a query into sub-queries, retrieve documents for each one, answer the sub-query, and then build on the answer by retrieving docs for the second sub-query. Here, we do similar:
-- Given a user-provided topic, use a local LLM (via [Ollama](https://ollama.com/search)) to generate a web search query
-- Uses a search engine (configured for [Tavily](https://www.tavily.com/)) to find relevant sources
-- Uses LLM to summarize the findings from web search related to the user-provided research topic
-- Then, it uses the LLM to reflect on the summary, identifying knowledge gaps
-- It generates a new search query to address the knowledge gaps
-- The process repeats, with the summary being iteratively updated with new information from web search
-- It will repeat down the research rabbit hole 
-- Runs for a configurable number of iterations (see `configuration` tab)  
+1. Access the LangGraph Studio Web UI (http://127.0.0.1:2024)
+2. Configure your settings in the `configuration` tab:
+   - Model selection (default: deepseek-r1:32b)
+   - Research iteration depth
+   - Additional parameters
 
-## Outputs
+<img width="1621" alt="Configuration Interface" src="https://github.com/user-attachments/assets/7cfd0e04-28fd-4cfa-aee5-9a556d74ab21" />
 
-The output of the graph is a markdown file containing the research summary, with citations to the sources used.
+3. Input your research topic and watch the system work:
 
-All sources gathered during research are saved to the graph state. 
+<img width="1621" alt="Research Process" src="https://github.com/user-attachments/assets/4de6bd89-4f3b-424c-a9cb-70ebd3d45c5f" />
 
-You can visualize them in the graph state, which is visible in LangGraph Studio:
+## 📊 Output Visualization
 
-![Screenshot 2024-12-05 at 4 08 59 PM](https://github.com/user-attachments/assets/e8ac1c0b-9acb-4a75-8c15-4e677e92f6cb)
+- **Research Summary**: Detailed markdown output with source citations
+- **Source Tracking**: Complete source list in graph state
+- **Process Visualization**: Full research workflow visible in LangGraph Studio
 
-The final summary is saved to the graph state as well: 
+![Source Visualization](https://github.com/user-attachments/assets/e8ac1c0b-9acb-4a75-8c15-4e677e92f6cb)
 
-![Screenshot 2024-12-05 at 4 10 11 PM](https://github.com/user-attachments/assets/f6d997d5-9de5-495f-8556-7d3891f6bc96)
+## 🛠 Technical Details
 
-## Deployment Options
+### Core Dependencies
+- LangGraph (≥0.2.55)
+- LangChain Community (≥0.3.9)
+- Tavily Python (≥0.5.0)
+- LangChain Ollama (≥0.2.1)
 
-There are [various ways](https://langchain-ai.github.io/langgraph/concepts/#deployment-options) to deploy this graph.
+### Project Structure
+```
+src/assistant/
+├── configuration.py  # System configuration
+├── graph.py         # Core workflow implementation
+├── prompts.py       # LLM prompts
+├── state.py         # State management
+└── utils.py         # Utility functions
+```
 
-See [Module 6](https://github.com/langchain-ai/langchain-academy/tree/main/module-6) of LangChain Academy for a detailed walkthrough of deployment options with LangGraph.
+## 🚀 Deployment
+
+For deployment options, refer to the [LangGraph documentation](https://langchain-ai.github.io/langgraph/concepts/#deployment-options) or explore [Module 6](https://github.com/langchain-ai/langchain-academy/tree/main/module-6) of LangChain Academy for detailed deployment walkthroughs.

@@ -30,6 +30,17 @@ The system is built on a graph-based workflow architecture with the following ke
      - Local LLM model selection (default: deepseek-r1:32b)
    - Supports environment variable overrides
 
+3. **MCP Integration** (`langgraph-mcp/`)
+   - Implements an MCP server for programmatic access to the research system
+   - Requires a running LangGraph instance on port 2024
+   - Current capabilities:
+     - Assistant discovery and retrieval
+     - Assistant metadata access
+   - Planned capabilities:
+     - Direct research graph execution
+     - Topic-based research initiation
+     - Research progress monitoring
+
 ### Research Workflow
 
 The system follows a structured research process:
@@ -69,10 +80,20 @@ The system follows a structured research process:
 ## Project Structure
 
 ```
-src/assistant/
-├── __init__.py
-├── configuration.py  # System configuration
-├── graph.py         # Core workflow implementation
-├── prompts.py       # LLM prompts
-├── state.py         # State management
-└── utils.py         # Utility functions
+.
+├── src/
+│   ├── assistant/
+│   │   ├── __init__.py
+│   │   ├── configuration.py  # System configuration
+│   │   ├── graph.py         # Core workflow implementation
+│   │   ├── prompts.py       # LLM prompts
+│   │   ├── state.py         # State management
+│   │   └── utils.py         # Utility functions
+│   └── github_assistant/    # GitHub-specific implementation
+└── langgraph-mcp/          # MCP server implementation
+    ├── src/
+    │   └── langgraph_mcp/
+    │       ├── __init__.py
+    │       ├── client.py    # LangGraph API client
+    │       └── types.py     # Type definitions
+    └── example.py          # Usage examples
